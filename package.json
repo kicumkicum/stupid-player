@@ -1,0 +1,11 @@
+{
+  "name": "stupid-player",
+  "version": "0.0.5",
+  "dependencies": {
+    "lame": "1.1.0",
+    "speaker": "0.1.2",
+    "events": "1.0.1",
+    "util": "0.10.3",
+    "node-mpg123-util": "~0.0.1"
+  }
+}
