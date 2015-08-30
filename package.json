@@ -1,9 +1,27 @@
 {
   "name": "stupid-player",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "dependencies": {
     "lame": "~1.1.0",
-    "speaker": "~0.1.2",
-    "node-mpg123-util": "~0.0.1"
-  }
+    "node-mpg123-util": "~0.0.1",
+    "promise": "^7.0.4",
+    "speaker": "~0.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:kicumkicum/stupid-player.git"
+  },
+  "keywords": [
+    "audio",
+    "lame",
+    "mp3",
+    "music",
+    "player"
+  ],
+  "author": "Oleg Akinin <kicumkicum@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kicumkicum/stupid-player/issues"
+  },
+  "homepage": "https://github.com/kicumkicum/stupid-player"
 }
