@@ -1,6 +1,6 @@
 # stupid-player
 
-It's midleware for simple create player in node.js project.
+It's middleware for simple create player in node.js project.
 
 ```javascript
 /** CREATE */
