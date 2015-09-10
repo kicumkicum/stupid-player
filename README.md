@@ -10,7 +10,7 @@ player.on(player.EVENT_PLAY, callback);
 player.on(player.EVENT_STOP, callback);
 player.on(player.EVENT_ERROR, callback);
 
-player.play(urlOrPath).
+player.play(urlOrPath)
   .then(function() {
     /** SOME CODE */
   });
