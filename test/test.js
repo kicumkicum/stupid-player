@@ -36,7 +36,7 @@ describe('Action', function() {
 				});
 		});
 
-		it.only('sync play-stop', function(done) {
+		it('sync play-stop', function(done) {
 			stupidPlayer.play('http://storage.mp3.cc/download/22183477/aGxhQVE2VTlqWGFGTm1mOVNUcS9ZcWsrMXh5K2d1T0lPZ1hNOUlEMUZxOTVhVTVKcHIzbHRZUGgrWDlhU0RrYW5BVzhSdXJPcEQvMDhSWnRRWGVaVVJYWDB1V0g5TEcxclhxYlhyUExuRld0L2h3ditLNzFDQVkwSWVUOWNubVQ/Oksana_Pochepa_Akula-Melodrama_(mp3.cc).mp3');
 			stupidPlayer.stop();
 			setTimeout(done, 10000);
