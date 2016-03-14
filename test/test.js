@@ -1,5 +1,5 @@
 var assert = require('assert');
-var url = 'http://picosong.com/cdn/7b64bb8716f6f35189b5fe1fba4efd12.mp3';
+var url = 'http://www.stephaniequinn.com/Music/Allegro%20from%20Duet%20in%20C%20Major.mp3';
 
 
 describe('Creating', function() {
@@ -16,13 +16,11 @@ describe('Action', function() {
 	var stupidPlayer = new StupidPlayer;
 
 	describe('playing', function() {
-		it('async', function(done) {
-			stupidPlayer.play('http://storage.mp3.cc/download/22183477/aGxhQVE2VTlqWGFGTm1mOVNUcS9ZcWsrMXh5K2d1T0lPZ1hNOUlEMUZxOTVhVTVKcHIzbHRZUGgrWDlhU0RrYW5BVzhSdXJPcEQvMDhSWnRRWGVaVVJYWDB1V0g5TEcxclhxYlhyUExuRld0L2h3ditLNzFDQVkwSWVUOWNubVQ/Oksana_Pochepa_Akula-Melodrama_(mp3.cc).mp3')
+		it.only('async', function(done) {
+			stupidPlayer.play(url)
 				.then(function () {
-					setTimeout(function () {
-						assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
-						done();
-					}, 10000);
+					assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
+					done();
 				});
 		});
 
@@ -51,6 +49,6 @@ describe('Action', function() {
 			stupidPlayer.play('http://storage.mp3.cc/download/22183477/aGxhQVE2VTlqWGFGTm1mOVNUcS9ZcWsrMXh5K2d1T0lPZ1hNOUlEMUZxOTVhVTVKcHIzbHRZUGgrWDlhU0RrYW5BVzhSdXJPcEQvMDhSWnRRWGVaVVJYWDB1V0g5TEcxclhxYlhyUExuRld0L2h3ditLNzFDQVkwSWVUOWNubVQ/Oksana_Pochepa_Akula-Melodrama_(mp3.cc).mp3');
 			stupidPlayer.stop();
 			setTimeout(done, 10000);
-		})
+		});
 	});
 });
