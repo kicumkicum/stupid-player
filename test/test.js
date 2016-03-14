@@ -16,7 +16,7 @@ describe('Action', function() {
 	var stupidPlayer = new StupidPlayer;
 
 	describe('playing', function() {
-		it.only('async', function(done) {
+		it('async', function(done) {
 			stupidPlayer.play(url)
 				.then(function () {
 					assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
