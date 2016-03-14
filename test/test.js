@@ -53,4 +53,41 @@ describe('Action', function() {
 			assert.equal(StupidPlayer.State.STOP, stupidPlayer._state, 'state');
 		});
 	});
+
+	describe('Multiple playing', function() {
+		describe('Url is not correct', function() {
+			it.only('Sync playing', function(done) {
+				var stupidPlayer = new StupidPlayer;
+				var url = 'http://ya.ru/';
+				var eventsCount = {
+					play: 0,
+					stop: 0,
+					error: 0
+				};
+				this.timeout(20 * 1000);
+
+				stupidPlayer.on(stupidPlayer.EVENT_ERROR, function() {
+					eventsCount.error++;
+					stupidPlayer.play(url);
+				});
+				stupidPlayer.on(stupidPlayer.EVENT_START, function() {
+					eventsCount.play++;
+				});
+				stupidPlayer.on(stupidPlayer.EVENT_STOP, function() {
+					eventsCount.stop++;
+				});
+
+				stupidPlayer.play(url);
+				setTimeout(function() {
+					assert.equal(eventsCount.error, eventsCount.play - 1, 'Error fired after not all play-events');
+					assert.equal(eventsCount.stop, 1, 'Stop was fired');
+					done();
+				}, 19 * 1000);
+			});
+
+			it('Async playing', function() {
+
+			});
+		});
+	});
 });
