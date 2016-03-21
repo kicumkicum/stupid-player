@@ -56,7 +56,7 @@ describe('Action', function() {
 
 	describe('Multiple playing', function() {
 		describe('Url is not correct', function() {
-			it.only('Sync playing', function(done) {
+			it('Sync playing', function(done) {
 				var stupidPlayer = new StupidPlayer;
 				var url = 'http://ya.ru/';
 				var eventsCount = {
@@ -81,6 +81,22 @@ describe('Action', function() {
 				setTimeout(function() {
 					assert.equal(eventsCount.error, eventsCount.play - 1, 'Error fired after not all play-events');
 					assert.equal(eventsCount.stop, 1, 'Stop was fired');
+					done();
+				}, 19 * 1000);
+			});
+
+			it('Sync double playing', function(done) {
+				var stupidPlayer = new StupidPlayer;
+				var url = 'http://ya.ru/';
+				this.timeout(20 * 1000);
+
+				stupidPlayer.on(stupidPlayer.EVENT_ERROR, function() {
+					stupidPlayer.play(url);
+					stupidPlayer.play(url);
+				});
+
+				stupidPlayer.play(url);
+				setTimeout(function() {
 					done();
 				}, 19 * 1000);
 			});
