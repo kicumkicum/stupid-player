@@ -4,7 +4,7 @@
   "dependencies": {
     "lame": "~1.1.0",
     "promise": "^7.0.4",
-    "speaker": "~0.1.2"
+    "speaker": "0.3.0"
   },
   "repository": {
     "type": "git",
