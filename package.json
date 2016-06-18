@@ -2,7 +2,7 @@
   "name": "stupid-player",
   "version": "0.1.0",
   "dependencies": {
-    "lame": "1.2.3",
+    "lame": "git://github.com/TooTallNate/node-lame.git596ce2957ed60250cf26b914608f4be75319294a",
     "promise": "^7.0.4",
     "speaker": "0.3.0"
   },
