@@ -1,0 +1,4 @@
+--strict
+--jsdoc
+--disable=5,222
+--max_line_length=120
