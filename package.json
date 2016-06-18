@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "dependencies": {
     "lame": "~1.1.0",
-    "node-mpg123-util": "~0.0.1",
     "promise": "^7.0.4",
     "speaker": "~0.1.2"
   },
