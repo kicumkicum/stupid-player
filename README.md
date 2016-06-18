@@ -6,7 +6,7 @@ It's middleware for simple create player in node.js project.
 /** CREATE */
 var player = new (require('stupid-player'));
 
-player.on(player.EVENT_START, callback);
+player.on(player.EVENT_PLAY, callback);
 player.on(player.EVENT_STOP, callback);
 player.on(player.EVENT_ERROR, callback);
 
