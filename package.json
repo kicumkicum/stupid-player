@@ -2,7 +2,7 @@
   "name": "stupid-player",
   "version": "0.1.0",
   "dependencies": {
-    "lame": "~1.1.0",
+    "lame": "1.2.3",
     "promise": "^7.0.4",
     "speaker": "0.3.0"
   },
