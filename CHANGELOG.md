@@ -1,4 +1,4 @@
-# v0.1.1 ()
+# v0.2.0 (19.06.2016)
 
 ## Feature
 [#15](https://github.com/kicumkicum/stupid-player/issues/15)
