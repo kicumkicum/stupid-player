@@ -38,19 +38,19 @@ describe('Action', function() {
 		it('async play-stop', function(done) {
 			stupidPlayer.play(url)
 				.then(function() {
-					assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
+					assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
 					stupidPlayer.stop();
-					assert.equal(StupidPlayer.State.STOP, stupidPlayer._state, 'state');
+					assert.equal(StupidPlayer.State.STOP, stupidPlayer.state, 'state');
 					done();
 				});
 		});
 
-		it('sync play-stop', function() {
+		it.only('sync play-stop', function() {
 			this.timeout(10 * 1000);
 			stupidPlayer.play(url);
-			assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
+			assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
 			stupidPlayer.stop();
-			assert.equal(StupidPlayer.State.STOP, stupidPlayer._state, 'state');
+			assert.equal(StupidPlayer.State.STOP, stupidPlayer.state, 'state');
 		});
 	});
 
