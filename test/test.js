@@ -17,7 +17,7 @@ describe('Action', function() {
 	describe('playing', function() {
 		it('async', function(done) {
 			stupidPlayer.play(url)
-				.then(function () {
+				.then(function() {
 					assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
 					done();
 				});
@@ -25,7 +25,7 @@ describe('Action', function() {
 
 		it('event', function(done) {
 			this.timeout(10 * 1000);
-			stupidPlayer.on(stupidPlayer.EVENT_START, function() {
+			stupidPlayer.on(stupidPlayer.EVENT_PLAY, function() {
 				assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
 				done();
 			});
