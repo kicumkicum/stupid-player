@@ -56,7 +56,7 @@ describe('Action', function() {
 
 	describe('Multiple playing', function() {
 		describe('Url is not correct', function() {
-			it('Sync playing', function(done) {
+			it.skip('Sync playing', function(done) {
 				var stupidPlayer = new StupidPlayer;
 				var url = 'http://ya.ru/';
 				var eventsCount = {
@@ -70,7 +70,7 @@ describe('Action', function() {
 					eventsCount.error++;
 					stupidPlayer.play(url);
 				});
-				stupidPlayer.on(stupidPlayer.EVENT_START, function() {
+				stupidPlayer.on(stupidPlayer.EVENT_PLAY, function() {
 					eventsCount.play++;
 				});
 				stupidPlayer.on(stupidPlayer.EVENT_STOP, function() {
