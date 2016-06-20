@@ -3,8 +3,8 @@
 ## Feature
 * [#9](https://github.com/kicumkicum/stupid-player/issues/9)
 Add play/pause
-
-# v0.2.1 ()
+* [#25](https://github.com/kicumkicum/stupid-player/issues/25)
+Change volume range from 0-1 to 0-100
 
 ## Enhancement
 * [#19](https://github.com/kicumkicum/stupid-player/issues/19)
