@@ -54,6 +54,31 @@ describe('Action', function() {
 		});
 	});
 
+	describe('pause', () => {
+		'use strict';
+		it('pause-resume', () => {
+			stupidPlayer.play(url)
+				.then(() => {
+					stupidPlayer.pause();
+					assert.equal(StupidPlayer.State.PAUSE, stupidPlayer.state, 'state');
+
+					stupidPlayer.play();
+					assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
+				});
+		});
+
+		it('toggle pause', () => {
+			stupidPlayer.play(url)
+				.then(() => {
+					stupidPlayer.togglePause();
+					assert.equal(StupidPlayer.State.PAUSE, stupidPlayer.state, 'state');
+
+					stupidPlayer.togglePause();
+					assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
+				});
+		});
+	});
+
 	describe('Multiple playing', function() {
 		describe('Url is not correct', function() {
 			it.skip('Sync playing', function(done) {
