@@ -25,7 +25,7 @@ describe('Action', function() {
 
 		it('event', function(done) {
 			this.timeout(10 * 1000);
-			stupidPlayer.on(stupidPlayer.EVENT_PLAY, function() {
+			stupidPlayer.once(stupidPlayer.EVENT_PLAY, function() {
 				assert.equal(StupidPlayer.State.PLAY, stupidPlayer._state, 'state');
 				done();
 			});
@@ -45,7 +45,7 @@ describe('Action', function() {
 				});
 		});
 
-		it.only('sync play-stop', function() {
+		it('sync play-stop', function() {
 			this.timeout(10 * 1000);
 			stupidPlayer.play(url);
 			assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
@@ -66,14 +66,14 @@ describe('Action', function() {
 				};
 				this.timeout(20 * 1000);
 
-				stupidPlayer.on(stupidPlayer.EVENT_ERROR, function() {
+				stupidPlayer.once(stupidPlayer.EVENT_ERROR, function() {
 					eventsCount.error++;
 					stupidPlayer.play(url);
 				});
-				stupidPlayer.on(stupidPlayer.EVENT_PLAY, function() {
+				stupidPlayer.once(stupidPlayer.EVENT_PLAY, function() {
 					eventsCount.play++;
 				});
-				stupidPlayer.on(stupidPlayer.EVENT_STOP, function() {
+				stupidPlayer.once(stupidPlayer.EVENT_STOP, function() {
 					eventsCount.stop++;
 				});
 
@@ -90,7 +90,7 @@ describe('Action', function() {
 				var url = 'http://ya.ru/';
 				this.timeout(20 * 1000);
 
-				stupidPlayer.on(stupidPlayer.EVENT_ERROR, function() {
+				stupidPlayer.once(stupidPlayer.EVENT_ERROR, function() {
 					stupidPlayer.play(url);
 					stupidPlayer.play(url);
 				});
