@@ -1,3 +1,9 @@
+# v0.3.0 ()
+
+## Feature
+* [#9](https://github.com/kicumkicum/stupid-player/issues/9)
+Add play/pause
+
 # v0.2.1 ()
 
 ## Enhancement
