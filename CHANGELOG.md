@@ -14,6 +14,11 @@ Rewrite code use ES6 classes
 * [#28](https://github.com/kicumkicum/stupid-player/issues/28)
 Add interface for adding new protocols getting audio
 
+## Fix
+
+* [#13](https://github.com/kicumkicum/stupid-player/issues/13)
+Fix crash if url is empty
+
 # v0.2.0 (19.06.2016)
 
 ## Feature
