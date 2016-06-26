@@ -13,6 +13,8 @@ Add tests
 Rewrite code use ES6 classes
 * [#28](https://github.com/kicumkicum/stupid-player/issues/28)
 Add interface for adding new protocols getting audio
+* [#38](https://github.com/kicumkicum/stupid-player/issues/38)
+Add rule for `*.md` files in editorconfig
 
 ## Fix
 * [#13](https://github.com/kicumkicum/stupid-player/issues/13)
