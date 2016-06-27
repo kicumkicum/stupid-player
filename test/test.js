@@ -82,15 +82,15 @@ describe('Action', function() {
 			});
 		});
 
-		it('toggle pause', () => {
-			stupidPlayer.play(url)
-				.then(() => {
-					stupidPlayer.togglePause();
-					assert.equal(StupidPlayer.State.PAUSE, stupidPlayer.state, 'state');
+		describe('Sync', () => {
+			it('play-pause-resume', () => {
+				stupidPlayer.play(url);
+				stupidPlayer.pause();
+				assert.equal(StupidPlayer.State.PAUSE, stupidPlayer.state, 'state');
 
-					stupidPlayer.togglePause();
-					assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
-				});
+				stupidPlayer.resume();
+				assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
+			})
 		});
 	});
 
