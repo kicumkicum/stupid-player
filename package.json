@@ -1,6 +1,7 @@
 {
   "name": "stupid-player",
   "version": "0.2.0",
+  "engine-strict": "true",
   "engines": {
     "node": ">=4.0.0"
   },
