@@ -6,7 +6,7 @@ Add play/pause
 * [#25](https://github.com/kicumkicum/stupid-player/issues/25)
 Change volume range from 0-1 to 0-100
 
-## Enhancement
+## Improvement
 * [#19](https://github.com/kicumkicum/stupid-player/issues/19)
 Add tests
 * [#24](https://github.com/kicumkicum/stupid-player/issues/24)
@@ -15,10 +15,14 @@ Rewrite code use ES6 classes
 Add interface for adding new protocols getting audio
 * [#38](https://github.com/kicumkicum/stupid-player/issues/38)
 Add rule for `*.md` files in editorconfig
+* [#42](https://github.com/kicumkicum/stupid-player/issues/42)
+Set node.js version in package.json as engine
 
 ## Fix
 * [#13](https://github.com/kicumkicum/stupid-player/issues/13)
 Fix crash if url is empty
+* [#39](https://github.com/kicumkicum/stupid-player/issues/39)
+Fix some crashes
 
 # v0.2.0 (19.06.2016)
 
