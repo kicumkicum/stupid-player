@@ -14,10 +14,13 @@ insert_final_newline = true
 charset = utf-8
 
 # Indentation override for all JS under lib directory
-[src/**.js]
+[**.js]
 indent_style = tab
 
 # Matches the exact files either package.json or .travis.yml
 [{package.json,.travis.yml,manifest.json}]
 indent_style = space
 indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

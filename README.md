@@ -16,7 +16,7 @@ player.play(urlOrPath)
   });
   
 /** CHANGE VOLUME */
-var value = 0.5;
+var value = 50;// 0..100
 player.setVolume(value)
   .then(function() {
     var currentVolume = player.getVolume();
