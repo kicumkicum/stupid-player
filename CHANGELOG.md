@@ -1,3 +1,13 @@
+# v0.3.1 ()
+
+## Feature
+* [#47](https://github.com/kicumkicum/stupid-player/issues/47)
+Add offset tracking, API and tests
+
+## Improvement
+* General improvement of build and test process
+
+
 # v0.3.0 ()
 
 ## Feature
