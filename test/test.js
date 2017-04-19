@@ -45,7 +45,7 @@ describe('Action', function() {
 						assert.notEqual(currentOffset, stupidPlayer.getOffset());
 						done();
 					}, 1000);
-				});;
+				});
 		});
 
 		it('should stop increasing offset on pause', function(done) {
@@ -59,7 +59,7 @@ describe('Action', function() {
 						assert.equal(currentOffset, stupidPlayer.getOffset());
 						done();
 					}, 1000);
-				});;
+				});
 		});
 
 		it('should stop increasing offset on stop', function(done) {
@@ -73,7 +73,7 @@ describe('Action', function() {
 						assert.equal(0, stupidPlayer.getOffset());
 						done();
 					}, 1000);
-				});;
+				});
 		});
 	});
 
