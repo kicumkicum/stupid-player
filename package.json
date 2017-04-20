@@ -1,11 +1,11 @@
 {
   "name": "stupid-player",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "engines": {
     "node": ">=4.0.0"
   },
   "scripts": {
-    "test": "mocha --timeout 15000"
+    "test": "node node_modules/mocha/bin/mocha --timeout 15000"
   },
   "dependencies": {
     "lame": "git://github.com/TooTallNate/node-lame.git#596ce2957ed60250cf26b914608f4be75319294a",
@@ -29,5 +29,8 @@
   "bugs": {
     "url": "https://github.com/kicumkicum/stupid-player/issues"
   },
-  "homepage": "https://github.com/kicumkicum/stupid-player"
+  "homepage": "https://github.com/kicumkicum/stupid-player",
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  }
 }

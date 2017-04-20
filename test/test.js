@@ -34,6 +34,49 @@ describe('Action', function() {
 		});
 	});
 
+	describe('offset', function() {
+
+		it('should increase offset on play', function(done) {
+			this.timeout(10 * 1000);
+			stupidPlayer.play(url).then(function() {
+					var currentOffset = stupidPlayer.getOffset();
+					assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
+					setTimeout(() => {
+						assert.notEqual(currentOffset, stupidPlayer.getOffset());
+						done();
+					}, 1000);
+				});
+		});
+
+		it('should stop increasing offset on pause', function(done) {
+			this.timeout(10 * 1000);
+			stupidPlayer.play(url).then(function() {
+					assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
+					setTimeout(() => {
+						var currentOffset = stupidPlayer.getOffset();
+						stupidPlayer.pause();
+						assert.equal(StupidPlayer.State.PAUSE, stupidPlayer.state, 'state');
+						assert.equal(currentOffset, stupidPlayer.getOffset());
+						done();
+					}, 1000);
+				});
+		});
+
+		it('should stop increasing offset on stop', function(done) {
+			this.timeout(10 * 1000);
+
+			stupidPlayer.play(url).then(function() {
+					assert.equal(StupidPlayer.State.PLAY, stupidPlayer.state, 'state');
+					setTimeout(() => {
+						stupidPlayer.stop();
+						assert.equal(StupidPlayer.State.STOP, stupidPlayer.state, 'state');
+						assert.equal(0, stupidPlayer.getOffset());
+						done();
+					}, 1000);
+				});
+		});
+	});
+
 	describe('stopping', function() {
 		it('async play-stop', function(done) {
 			stupidPlayer.play(url)

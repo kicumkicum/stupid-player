@@ -1,4 +1,10 @@
-# v0.3.0 ()
+# v0.3.1 (19.04.2017)
+
+## Feature
+* [#47](https://github.com/kicumkicum/stupid-player/issues/47)
+Add offset tracking, API and tests
+
+# v0.3.0 (25.11.2016)
 
 ## Feature
 * [#9](https://github.com/kicumkicum/stupid-player/issues/9)
