@@ -11,7 +11,8 @@
     "lame": "git://github.com/TooTallNate/node-lame.git#596ce2957ed60250cf26b914608f4be75319294a",
     "node-mpg123-util": "git://github.com/kicumkicum/node-mpg123-util.git#ae4d215",
     "promise": "^7.0.4",
-    "speaker": "0.3.0"
+    "speaker": "0.3.0",
+    "torrent-stream": "^1.0.3"
   },
   "repository": {
     "type": "git",
