@@ -1,0 +1,5 @@
+.floo
+.flooignore
+.npmignore
+tsconfig.json
+tsconfig.test.json
