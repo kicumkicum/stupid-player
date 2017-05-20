@@ -1,17 +1,10 @@
-const fs = require('fs');
+import * as fs from 'fs';
+import {ReadStream} from 'fs';
 
-
-/**
- * @type {Route}
- */
-module.exports = {
+export default {
 	regexp: /^\.|^\//,
 
-	/**
-	 * @param {string} path
-	 * @return {Promise<ReadStream>}
-	 */
-	read: function(path) {
+	read: function(path: string): Promise<ReadStream> {
 		'use strict';
 
 		return new Promise((resolve, reject) => {
