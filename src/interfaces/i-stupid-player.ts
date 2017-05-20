@@ -1,26 +1,26 @@
-import * as events from 'events';
+import {EventEmitter} from 'events';
 
-export interface IStupidPlayer extends events.EventEmitter {
+export interface IStupidPlayer extends EventEmitter {
 	/**
 	 * Fired with: {number} volume
 	 */
-	EVENT_VOLUME_CHANGE: string;
+	readonly EVENT_VOLUME_CHANGE: string;
 
 	/**
 	 * Fired with: {string}
 	 */
-	EVENT_ERROR: string;
+	readonly EVENT_ERROR: string;
 
-	EVENT_PLAY: string;
-	EVENT_PAUSE: string;
-	EVENT_STOP: string;
+	readonly EVENT_PLAY: string;
+	readonly EVENT_PAUSE: string;
+	readonly EVENT_STOP: string;
 
 	play(url: string): Promise<undefined>;
 	pause(): Promise<undefined>;
 	resume(): Promise<undefined>;
 	togglePause(): Promise<undefined>;
 	stop(): Promise<undefined>;
-	getVolume(): Promise<number>;
+	getVolume(): number|null;
 	setVolume(value: number): Promise<number>;
 	getState(): State;
 }

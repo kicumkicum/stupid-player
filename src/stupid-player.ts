@@ -1,275 +1,200 @@
-const IStupidPlayer = require('./interfaces/i-stupid-player');
-const Router = require('./router');
-const Speaker = require('speaker');
-const events = require('events');
-const fs = require('fs');
-const http = require('http');
-const https = require('https');
-const lame = require('lame');
-const mpg123Util = require('node-mpg123-util');
-const util = require('util');
+import {EventEmitter} from 'events';
+import {IStupidPlayer, State} from './interfaces/i-stupid-player';
+import {Router, SReadStream} from './router';
 
+import * as Speaker from 'speaker';
+import * as lame from 'lame';
+import * as mpg123Util from 'node-mpg123-util';
 
+export default class StupidPlayer extends EventEmitter implements IStupidPlayer {
+	private decoder: (Decoder|null) = null;
+	private mpg123Util: Mpg123Util = mpg123Util;
+	private offset: number = 0;
+	private offsetInterval: (NodeJS.Timer|null) = null;
+	private readStream: (SReadStream|null) = null;
+	private pauseTimestamp: number = 0;
+	private state: State = State.STOP;
+	private router: Router = new Router;
 
-/**
- * @constructor
- * @implements {IStupidPlayer}
- */
-module.exports = (function() {
-	'use strict';
-	return class StupidPlayer extends IStupidPlayer {
-		constructor() {
-			super();
+	private readonly VOLUME_CHANGE_TIMEOUT: number = 300;
 
-			/**
-			 * @type {Object}
-			 * @private
-			 */
-			this._decoder = null;
+	readonly EVENT_ERROR: string = 'event-error';
+	readonly EVENT_PAUSE: string = 'event-pause';
+	readonly EVENT_PLAY: string = 'event-play';
+	readonly EVENT_STOP: string = 'event-stop';
+	readonly EVENT_VOLUME_CHANGE: string = 'event-volume-change';
 
-			/**
-			 * @type {Object}
-			 * @private
-			 */
-			this._speaker = null;
+	constructor() {
+		super();
 
-			/**
-			 * @type {number}
-			 * @private
-			 */
-			this._offset = 0;
+		this.onDecoderClosed = this.onDecoderClosed.bind(this);
+		this.onError = this.onError.bind(this);
 
-			/**
-			 * @type {?number}
-			 * @private
-			 */
-			this._offsetInterval = null;
+		this.on(this.EVENT_PLAY, () => {
+			this.offsetInterval = setInterval(() => {
+				this.offset = this.offset + 100;
+			}, 100);
+		});
 
-			/**
-			 * @type {StupidPlayer.ReadStream}
-			 * @private
-			 */
-			this._readStream = null;
-
-			/**
-			 * @type {StupidPlayer.State}
-			 * @private
-			 */
-			this._state = StupidPlayer.State.STOP;
-
-			/**
-			 * @type {Router}
-			 */
-			this._router = new Router;
-
-			/**
-			 * @const {number}
-			 */
-			this.VOLUME_CHANGE_TIMEOUT = 300;
-
-			this._onDecoderClosed = this._onDecoderClosed.bind(this);
-			this._onError = this._onError.bind(this);
-
-			this.on(this.EVENT_PLAY, () => {
-				this._offsetInterval = setInterval(() => {
-					this._offset = this._offset + 100;
-				}, 100);
-			});
-
-			this.on(this.EVENT_PAUSE, () => {
-				if (this._offsetInterval !== null) {
-					clearInterval(this._offsetInterval);
-				}
-				this._offsetInterval = null;
-			});
-
-			this.on(this.EVENT_STOP, () => {
-				if (this._offsetInterval !== null) {
-					clearInterval(this._offsetInterval);
-				}
-				this._offsetInterval = null;
-				this._offset = 0;
-			});
-		}
-
-		/**
-		 * @override
-		 */
-		play(uri) {
-			this._deinit();
-			this._state = StupidPlayer.State.PLAY;
-
-			// Only called on new playback
-			this._offset = 0;
-
-			this._emit(this.EVENT_PLAY);
-
-			return this._router
-				.route(uri)
-				.then(this._makeDecoder.bind(this), this._onError);
-		}
-
-		/**
-		 * @override
-		 */
-		pause() {
-			if (this._state === StupidPlayer.State.PLAY) {
-				this._state = StupidPlayer.State.PAUSE;
-				this._pauseTimestamp = Date.now();
-				if (this._decoder) {
-					this._decoder.unpipe();
-				}
+		this.on(this.EVENT_PAUSE, () => {
+			if (this.offsetInterval !== null) {
+				clearInterval(this.offsetInterval);
 			}
+			this.offsetInterval = null;
+		});
 
-			return Promise.resolve()
-				.then(() => {
-					this._emit(this.EVENT_PAUSE)
-				});
-		}
-
-		resume() {
-			if (this._state === StupidPlayer.State.PAUSE) {
-				this._state = StupidPlayer.State.PLAY;
-				if (this._decoder) {
-					this._decoder.pipe(new Speaker({}));
-				}
+		this.on(this.EVENT_STOP, () => {
+			if (this.offsetInterval !== null) {
+				clearInterval(this.offsetInterval);
 			}
+			this.offsetInterval = null;
+			this.offset = 0;
+		});
+	}
 
-			return Promise.resolve()
-				.then(() => {
-					this._emit(this.EVENT_PLAY);
-				});
+	play(uri): Promise<undefined> {
+		this.deinit();
+		this.state = State.PLAY;
+
+		// Only called on new playback
+		this.offset = 0;
+
+		this._emit(this.EVENT_PLAY);
+
+		return this.router
+			.route(uri)
+			.then((readStream) => this.makeDecoder(readStream), this.onError);
+	}
+
+	pause(): Promise<undefined> {
+		if (this.state === State.PLAY) {
+			this.state = State.PAUSE;
+			this.pauseTimestamp = Date.now();
+			if (this.decoder) {
+				this.decoder.unpipe();
+			}
 		}
 
-		togglePause() {
-			if (this._state === StupidPlayer.State.PAUSE) {
-				return this.resume();
+		return Promise.resolve()
+			.then(() => this._emit(this.EVENT_PAUSE));
+	}
+
+	resume(): Promise<undefined> {
+		if (this.state === State.PAUSE) {
+			this.state = State.PLAY;
+			if (this.decoder) {
+				this.decoder.pipe(new Speaker({}));
+			}
+		}
+
+		return Promise.resolve()
+			.then(() => this._emit(this.EVENT_PLAY));
+	}
+
+	togglePause(): Promise<undefined> {
+		if (this.state === State.PAUSE) {
+			return this.resume();
+		} else {
+			return this.pause();
+		}
+	}
+
+	stop(): Promise<undefined> {
+		if (this.state !== State.STOP) {
+			this.state = State.STOP;
+			this.deinit();
+			this._emit(this.EVENT_STOP);
+		}
+
+		return Promise.resolve();
+	}
+	
+	getVolume(): (number|null) {
+		if (this.decoder) {
+			return Math.floor(this.mpg123Util.getVolume(this.decoder.mh) * 100);
+		} else {
+			return null;
+		}
+	}
+
+	getOffset(): number {
+		return this.offset;
+	}
+	
+	setVolume(value): Promise<number> {
+		return new Promise((resolve, reject) => {
+			const resolver = () => {
+				resolve(value);
+				this._emit(this.EVENT_VOLUME_CHANGE, value);
+			};
+
+			if (this.decoder) {
+				// TODO: перенести в свойство класса
+				this.mpg123Util.setVolume(this.decoder.mh, value / 100);
+				setTimeout(resolver, this.VOLUME_CHANGE_TIMEOUT);
 			} else {
-				return this.pause();
+				reject(null);
 			}
+		});
+	}
+
+	getState(): State {
+		return this.state;
+	}
+
+	private makeDecoder(readStream: SReadStream) {
+		if (this.state === State.PLAY) {
+			readStream.on('error', this.onError);
+			readStream.on('close', this.onDecoderClosed);
+
+			this.readStream = readStream;
+			this.decoder = readStream.pipe(new lame.Decoder);
+			this.decoder
+				.pipe(new Speaker({}))
+				.on('error', this.onError)
+				.on('close', this.onDecoderClosed);
+		} else {
+			this.stop();
+		}
+	}
+
+	private deinit() {
+		if (this.readStream) {
+			this.readStream.removeAllListeners('close');
+			this.readStream.destroy();
+			this.readStream.removeAllListeners('error');
+			this.readStream = null;
 		}
 
-		/**
-		 * @override
-		 */
-		stop() {
-			if (this._state !== StupidPlayer.State.STOP) {
-				this._state = StupidPlayer.State.STOP;
-				this._deinit();
-				this._emit(this.EVENT_STOP);
-			}
-
-			return Promise.resolve();
+		if (this.decoder) {
+			this.decoder.removeAllListeners('close');
+			this.decoder.removeAllListeners('error');
+			this.decoder.unpipe();
+			this.decoder = null;
 		}
+	}
 
-		/**
-		 * @return {?number}
-		 */
-		getVolume() {
-			if (this._decoder) {
-				return Math.floor(mpg123Util.getVolume(this._decoder.mh) * 100);
-			} else {
-				return null;
-			}
-		}
+	private _emit(event: string, data?: any) {
+		//console.log('stupid-player _emit', event);
+		this.emit(event, data);
+	}
+	
+	private onDecoderClosed() {
+		return 	this.stop();
+	}
 
-		/**
-		 * @return {number}
-		 */
-		getOffset() {
-			return this._offset;
-		}
+	private onError(error: string) {
+		this._emit(this.EVENT_ERROR, error);
+		return this.deinit();
+	}
+}
 
-		/**
-		 * @param {number} value
-		 * @return {Promise<number>}
-		 */
-		setVolume(value) {
-			return new Promise((resolve, reject) => {
-				var resolver = () => {
-					resolve(value);
-					this._emit(this.EVENT_VOLUME_CHANGE, value);
-				};
 
-				if (this._decoder) {
-					mpg123Util.setVolume(this._decoder.mh, value / 100);
-					setTimeout(resolver, this.VOLUME_CHANGE_TIMEOUT);
-				} else {
-					reject(null);
-				}
-			});
-		}
+interface Mpg123Util {
+	getVolume(mh: Buffer): number;
+	setVolume(mh: Buffer, volume: number);
+}
 
-		/**
-		 * @param {StupidPlayer.ReadStream} readStream
-		 * @protected
-		 */
-		_makeDecoder(readStream) {
-			if (this._state === StupidPlayer.State.PLAY) {
-				readStream.on('error', this._onError);
-				readStream.on('close', this._onDecoderClosed);
-
-				this._readStream = readStream;
-				this._decoder = readStream.pipe(new lame.Decoder);
-				this._decoder
-					.pipe(new Speaker({}))
-					.on('error', this._onError)
-					.on('close', this._onDecoderClosed);
-			} else {
-				this.stop();
-			}
-		}
-
-		/**
-		 * @protected
-		 */
-		_deinit() {
-			if (this._readStream) {
-				this._readStream.removeAllListeners('close');
-				this._readStream.destroy();
-				this._readStream.removeAllListeners('error');
-				this._readStream = null;
-			}
-
-			if (this._decoder) {
-				this._decoder.removeAllListeners('close');
-				this._decoder.removeAllListeners('error');
-				this._decoder.unpipe();
-				this._decoder = null;
-			}
-		}
-
-		_emit(event, opt_data) {
-			//console.log('stupid-player emit', event);
-			this.emit(event, opt_data);
-		}
-
-		/**
-		 * @protected
-		 */
-		_onDecoderClosed() {
-			return 	this.stop();
-		}
-
-		/**
-		 * @param {string} error
-		 * @protected
-		 */
-		_onError(error) {
-			this._emit(this.EVENT_ERROR, error);
-			return this._deinit();
-		}
-
-		/**
-		 * @override
-		 */
-		get state() {
-			return this._state;
-		}
-
-		/**
-		 * @typedef {Stream}
-		 */
-		static ReadStream() {}
-	};
-})();
+interface Decoder extends SReadStream {
+	mh: Buffer;
+}
