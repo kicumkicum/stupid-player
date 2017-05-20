@@ -1,7 +1,7 @@
 const StupidPlayer = require('../lib').StupidPlayer;
 const State = require('../lib').State;
 const assert = require('assert');
-const url = '/home/oleg/project/rest/stupid-player/5.mp3';//'/home/oleg/project/rest/stupid-player/major.mp3';
+const url = './files/5.mp3';
 
 
 describe('Creating', function() {
