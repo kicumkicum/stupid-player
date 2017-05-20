@@ -5,13 +5,25 @@
     "node": ">=4.0.0"
   },
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha --timeout 15000"
+    "clean": "rm -rf ./lib",
+    "prebuild": "npm run clean",
+    "build": "./node_modules/.bin/tsc",
+    "prestart": "npm run build",
+    "start": "node ./lib",
+    "test": "mocha --recursive --timeout 15000"
   },
   "dependencies": {
-    "lame": "^1.2.4",
+    "lame": "git://github.com/TooTallNate/node-lame.git#596ce2957ed60250cf26b914608f4be75319294a",
     "node-mpg123-util": "git://github.com/kicumkicum/node-mpg123-util.git#ae4d215",
     "promise": "^7.0.4",
-    "speaker": "^0.4.0"
+    "speaker": "0.4.0"
+  },
+  "devDependencies": {
+    "@types/chai": "3.5.0",
+    "@types/mocha": "2.2.40",
+    "@types/node": "7.0.12",
+    "mocha": "3.4.1",
+    "typescript": "^2.2.2"
   },
   "repository": {
     "type": "git",
@@ -30,7 +42,6 @@
     "url": "https://github.com/kicumkicum/stupid-player/issues"
   },
   "homepage": "https://github.com/kicumkicum/stupid-player",
-  "devDependencies": {
-    "mocha": "^3.2.0"
-  }
+  "main": "lib/index",
+  "typings": "lib/index"
 }

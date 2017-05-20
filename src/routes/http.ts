@@ -1,20 +1,16 @@
-const http = require('http');
-const https = require('https');
+import * as http from 'http';
+import * as https from 'https';
 
 
-/**
- * @type {Route}
- */
-module.exports = {
+export default {
 	regexp: /^https*:\/\//,
 
-	read: function(url) {
-		'use strict';
-
+	read(url: string): Promise<http.IncomingMessage> {
 		return new Promise((resolve, reject) => {
-			var request = url.indexOf('https') === 0 ? https : http;
+			const get = url.indexOf('https') === 0 ? https.get : http.get;
 
-			request.get(url, (res, req) => {
+			// @ts-ignore
+			get(url, (res) => {
 				const statusCode = res['statusCode'];
 				const contentType = res['headers']['content-type'];
 
@@ -29,4 +25,4 @@ module.exports = {
 			});
 		});
 	}
-};
+}
