@@ -15,7 +15,7 @@ export class Router {
 
 	route(uri: string): Promise<SReadStream> {
 		const route = this.routes.filter((protocol) => {
-			return protocol.regexp.test(uri);
+			return protocol.test(uri);
 		})[0];
 
 		if (route) {
@@ -27,7 +27,7 @@ export class Router {
 }
 
 export interface IRoute {
-	regexp: RegExp;
+	test: (string) => boolean;
 	read: (string) => Promise<SReadStream>;
 }
 
