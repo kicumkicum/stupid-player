@@ -24,6 +24,7 @@
     "@types/chai": "^3.5.0",
     "@types/mocha": "^2.2.40",
     "@types/node": "^7.0.12",
+    "@types/torrent-stream": "0.0.5",
     "typescript": "^2.2.2"
   },
   "repository": {
