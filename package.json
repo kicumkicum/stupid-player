@@ -13,6 +13,7 @@
     "test": "mocha --recursive --timeout 15000"
   },
   "dependencies": {
+    "combined-stream": "^1.0.5",
     "lame": "git://github.com/TooTallNate/node-lame.git#596ce2957ed60250cf26b914608f4be75319294a",
     "magnet-uri": "^5.1.7",
     "mocha": "^3.4.1",
