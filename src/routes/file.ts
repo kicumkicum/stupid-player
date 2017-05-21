@@ -2,11 +2,9 @@ import * as fs from 'fs';
 import {ReadStream} from 'fs';
 
 export default {
-	regexp: /^\.|^\//,
+	test: (uri: string): boolean => /^\.|^\//.test(uri),
 
-	read: function(path: string): Promise<ReadStream> {
-		'use strict';
-
+	read: (path: string): Promise<ReadStream> => {
 		return new Promise((resolve, reject) => {
 			let readStream = null;
 
