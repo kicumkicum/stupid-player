@@ -1,5 +1,6 @@
 .floo
 .flooignore
 .npmignore
+npm-debug.log
 tsconfig.json
 tsconfig.test.json
