@@ -1,5 +1,6 @@
 import fileRoute from './routes/file';
 import httpRoute from './routes/http';
+import torrentRoute from './routes/torrent';
 import {Readable} from 'stream';
 
 export class Router {
@@ -7,6 +8,7 @@ export class Router {
 
 	constructor() {
 		this.routes = [
+			torrentRoute,
 			fileRoute,
 			httpRoute
 		];
@@ -17,7 +19,6 @@ export class Router {
 		const route = this.routes.filter((protocol) => {
 			return protocol.test(uri);
 		})[0];
-
 		if (route) {
 			return route.read(uri);
 		} else {

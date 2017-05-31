@@ -13,16 +13,20 @@
     "test": "mocha --recursive --timeout 15000"
   },
   "dependencies": {
+    "combined-stream": "^1.0.5",
     "lame": "git://github.com/TooTallNate/node-lame.git#596ce2957ed60250cf26b914608f4be75319294a",
+    "magnet-uri": "^5.1.7",
     "mocha": "^3.4.1",
     "node-mpg123-util": "git://github.com/kicumkicum/node-mpg123-util.git#ae4d215",
     "promise": "^7.0.4",
-    "speaker": "0.3.0"
+    "speaker": "0.3.0",
+    "torrent-stream": "^1.0.3"
   },
   "devDependencies": {
     "@types/chai": "^3.5.0",
     "@types/mocha": "^2.2.40",
     "@types/node": "^7.0.12",
+    "@types/torrent-stream": "0.0.5",
     "typescript": "^2.2.2"
   },
   "repository": {
