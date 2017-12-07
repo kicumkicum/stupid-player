@@ -1,3 +1,9 @@
+# v0.3.2 (08.12.2017)
+
+## Fixes
+* [#56](https://github.com/kicumkicum/stupid-player/issues/47)
+Fix long stopping
+
 # v0.3.1 (19.04.2017)
 
 ## Feature
