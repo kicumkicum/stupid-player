@@ -1,7 +1,8 @@
 const StupidPlayer = require('../lib').StupidPlayer;
 const State = require('../lib').State;
 const assert = require('assert');
-const url = './files/5.mp3';
+
+const url = `${__dirname}/files/Fragile-Lo-Fi-Chill-Melancholic-Music.mp3`;
 
 
 describe('Creating', function() {
@@ -56,33 +57,36 @@ describe('Action', function() {
 		it('should stop increasing offset on pause', function(done) {
 			this.timeout(10 * 1000);
 			console.log('before play');
+
 			stupidPlayer.play(url).then(function() {
 				console.log('after play');
-					setTimeout(() => {
-						const currentOffset = stupidPlayer.getOffset();
-						console.log('offset', currentOffset);
-						stupidPlayer.pause();
-						assert.equal(State.PAUSE, stupidPlayer.getState(), 'state');
-						console.log('offset', currentOffset);
-						assert.equal(currentOffset, stupidPlayer.getOffset());
-						done();
-						console.log('after done');
-					}, 1000);
-				});
+                setTimeout(() => {
+                    const currentOffset = stupidPlayer.getOffset();
+                    console.log('offset', currentOffset);
+
+                    stupidPlayer.pause();
+
+                    console.log('offset', currentOffset);
+                    assert.equal(currentOffset, stupidPlayer.getOffset());
+
+                    done();
+                    console.log('after done');
+                }, 1000);
+            });
 		});
 
-		it('should stop increasing offset on stop', function(done) {
+		it.only('should stop increasing offset on stop', function(done) {
 			this.timeout(10 * 1000);
 
 			stupidPlayer.play(url).then(function() {
-					assert.equal(State.PLAY, stupidPlayer.getState(), 'state');
-					setTimeout(() => {
-						stupidPlayer.stop();
-						assert.equal(State.STOP, stupidPlayer.getState(), 'state');
-						assert.equal(0, stupidPlayer.getOffset());
-						done();
-					}, 1000);
-				});
+				setTimeout(() => {
+					stupidPlayer.stop();
+
+					assert.equal(0, stupidPlayer.getOffset());
+
+					done();
+				}, 1000);
+			});
 		});
 	});
 

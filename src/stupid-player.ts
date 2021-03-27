@@ -5,9 +5,9 @@ import * as lame from 'lame';
 import * as mpg123Util from 'node-mpg123-util';
 
 export enum State {
-	PAUSE,
-	PLAY,
-	STOP
+	PAUSE = 'pause',
+	PLAY = 'play',
+	STOP = 'stop',
 }
 
 export default class StupidPlayer extends EventEmitter {
@@ -17,7 +17,6 @@ export default class StupidPlayer extends EventEmitter {
 	private offset: number = 0;
 	private offsetInterval: (NodeJS.Timer|null) = null;
 	private readStream: (SReadStream|null) = null;
-	private pauseTimestamp: number = 0;
 	private state: State = State.STOP;
 	private router: Router = new Router;
 
@@ -47,14 +46,6 @@ export default class StupidPlayer extends EventEmitter {
 			}
 			this.offsetInterval = null;
 		});
-
-		this.on(this.EVENT_STOP, () => {
-			if (this.offsetInterval !== null) {
-				clearInterval(this.offsetInterval);
-			}
-			this.offsetInterval = null;
-			this.offset = 0;
-		});
 	}
 
 	play(uri): Promise<void> {
@@ -74,7 +65,7 @@ export default class StupidPlayer extends EventEmitter {
 	pause(): Promise<void> {
 		if (this.state === State.PLAY) {
 			this.state = State.PAUSE;
-			this.pauseTimestamp = Date.now();
+
 			if (this.decoder) {
 				this.decoder.unpipe();
 			}
@@ -107,6 +98,13 @@ export default class StupidPlayer extends EventEmitter {
 	stop(): Promise<void> {
 		if (this.state !== State.STOP) {
 			this.state = State.STOP;
+
+			if (this.offsetInterval !== null) {
+				clearInterval(this.offsetInterval);
+				this.offsetInterval = null;
+			}
+			this.offset = 0;
+
 			this.deinit();
 			this._emit(this.EVENT_STOP);
 		}
