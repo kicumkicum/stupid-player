@@ -1,12 +1,16 @@
 import {EventEmitter} from 'events';
-import {IStupidPlayer, State} from './interfaces/i-stupid-player';
 import {Router, SReadStream} from './router';
-
 import * as Speaker from 'speaker';
 import * as lame from 'lame';
 import * as mpg123Util from 'node-mpg123-util';
 
-export default class StupidPlayer extends EventEmitter implements IStupidPlayer {
+export enum State {
+	PAUSE,
+	PLAY,
+	STOP
+}
+
+export default class StupidPlayer extends EventEmitter {
 	private decoder: (Decoder|null) = null;
 	private speaker: Speaker|null = null;
 	private mpg123Util: Mpg123Util = mpg123Util;
@@ -53,7 +57,7 @@ export default class StupidPlayer extends EventEmitter implements IStupidPlayer 
 		});
 	}
 
-	play(uri): Promise<undefined> {
+	play(uri): Promise<void> {
 		this.deinit();
 		this.state = State.PLAY;
 
@@ -67,7 +71,7 @@ export default class StupidPlayer extends EventEmitter implements IStupidPlayer 
 			.then((readStream) => this.makeDecoder(readStream), this.onError);
 	}
 
-	pause(): Promise<undefined> {
+	pause(): Promise<void> {
 		if (this.state === State.PLAY) {
 			this.state = State.PAUSE;
 			this.pauseTimestamp = Date.now();
@@ -80,7 +84,7 @@ export default class StupidPlayer extends EventEmitter implements IStupidPlayer 
 			.then(() => this._emit(this.EVENT_PAUSE));
 	}
 
-	resume(): Promise<undefined> {
+	resume(): Promise<void> {
 		if (this.state === State.PAUSE) {
 			this.state = State.PLAY;
 			if (this.decoder) {
@@ -92,7 +96,7 @@ export default class StupidPlayer extends EventEmitter implements IStupidPlayer 
 			.then(() => this._emit(this.EVENT_PLAY));
 	}
 
-	togglePause(): Promise<undefined> {
+	togglePause(): Promise<void> {
 		if (this.state === State.PAUSE) {
 			return this.resume();
 		} else {
@@ -100,7 +104,7 @@ export default class StupidPlayer extends EventEmitter implements IStupidPlayer 
 		}
 	}
 
-	stop(): Promise<undefined> {
+	stop(): Promise<void> {
 		if (this.state !== State.STOP) {
 			this.state = State.STOP;
 			this.deinit();
