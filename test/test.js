@@ -75,7 +75,7 @@ describe('Action', function() {
             });
 		});
 
-		it.only('should stop increasing offset on stop', function(done) {
+		it('should stop increasing offset on stop', function(done) {
 			this.timeout(10 * 1000);
 
 			stupidPlayer.play(url).then(function() {
