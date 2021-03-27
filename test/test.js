@@ -2,7 +2,10 @@ const StupidPlayer = require('../lib').StupidPlayer;
 const State = require('../lib').State;
 const assert = require('assert');
 
-const url = `./`;
+const url = `${__dirname}/files/Fragile-Lo-Fi-Chill-Melancholic-Music.mp3`;
+const wait = (timeout) => {
+	return new Promise((resolve) => setTimeout(resolve, timeout));
+};
 
 
 describe('Creating', function() {
@@ -12,6 +15,38 @@ describe('Creating', function() {
 	});
 });
 
+
+describe.only('Fofo', () => {
+  it('1', async function() {
+    const stupidPlayer = new StupidPlayer();
+    this.timeout(45 * 1000)
+
+    await stupidPlayer.play(url);
+    console.log('await stupidPlayer.play(url);')
+    await wait(3000);
+    console.log('await wait(3000);')
+    await stupidPlayer.stop();
+    console.log('await stupidPlayer.stop();')
+    console.log('pre wait')
+    await wait(3000);
+    console.log('await wait(3000);')
+    console.log('pre play')
+    await stupidPlayer.play(url);
+    console.log('await stupidPlayer.play(url);')
+    await wait(3000);
+    console.log('await wait(3000);')
+    await stupidPlayer.pause();
+    console.log('await stupidPlayer.pause();')
+    await wait(3000);
+    console.log('await wait(3000);')
+    await stupidPlayer.resume();
+    console.log('await stupidPlayer.resume();')
+    await wait(3000);
+    console.log('await wait(3000);')
+    await stupidPlayer.stop();
+    console.log('await stupidPlayer.stop();')
+  })
+});
 
 describe('Action', function() {
 	const stupidPlayer = new StupidPlayer;

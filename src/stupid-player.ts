@@ -1,8 +1,6 @@
 import {EventEmitter} from 'events';
 import {Router, SReadStream} from './router';
-import * as Speaker from 'speaker';
-import * as lame from 'lame';
-import * as mpg123Util from 'node-mpg123-util';
+import {SoundStream} from "./sound-stream";
 
 export enum State {
 	PAUSE = 'pause',
@@ -11,16 +9,12 @@ export enum State {
 }
 
 export default class StupidPlayer extends EventEmitter {
-	private decoder: (Decoder|null) = null;
-	private speaker: Speaker|null = null;
-	private mpg123Util: Mpg123Util = mpg123Util;
 	private offset: number = 0;
 	private offsetInterval: (NodeJS.Timer|null) = null;
 	private readStream: (SReadStream|null) = null;
 	private state: State = State.STOP;
 	private router: Router = new Router;
-
-	private readonly VOLUME_CHANGE_TIMEOUT: number = 300;
+	private _speaker: SoundStream = new SoundStream();
 
 	readonly EVENT_ERROR: string = 'event-error';
 	readonly EVENT_PAUSE: string = 'event-pause';
@@ -66,9 +60,7 @@ export default class StupidPlayer extends EventEmitter {
 		if (this.state === State.PLAY) {
 			this.state = State.PAUSE;
 
-			if (this.decoder) {
-				this.decoder.unpipe();
-			}
+			this._speaker.pause();
 		}
 
 		return Promise.resolve()
@@ -78,9 +70,8 @@ export default class StupidPlayer extends EventEmitter {
 	resume(): Promise<void> {
 		if (this.state === State.PAUSE) {
 			this.state = State.PLAY;
-			if (this.decoder) {
-				this.decoder.pipe(new Speaker({}));
-			}
+
+			this._speaker.resume();
 		}
 
 		return Promise.resolve()
@@ -111,34 +102,17 @@ export default class StupidPlayer extends EventEmitter {
 
 		return Promise.resolve();
 	}
-	
-	getVolume(): (number|null) {
-		if (this.decoder) {
-			return Math.floor(this.mpg123Util.getVolume(this.decoder.mh) * 100);
-		} else {
-			return null;
-		}
-	}
 
 	getOffset(): number {
 		return this.offset;
 	}
-	
-	setVolume(value): Promise<number> {
-		return new Promise((resolve, reject) => {
-			const resolver = () => {
-				resolve(value);
-				this._emit(this.EVENT_VOLUME_CHANGE, value);
-			};
 
-			if (this.decoder) {
-				// TODO: перенести в свойство класса
-				this.mpg123Util.setVolume(this.decoder.mh, value / 100);
-				setTimeout(resolver, this.VOLUME_CHANGE_TIMEOUT);
-			} else {
-				reject(null);
-			}
-		});
+	getVolume(): (number|null) {
+		return this._speaker.getVolume();
+	}
+
+	async setVolume(value): Promise<void> {
+		await this._speaker.setVolume(value);
 	}
 
 	getState(): State {
@@ -151,48 +125,33 @@ export default class StupidPlayer extends EventEmitter {
 			readStream.on('close', this.onDecoderClosed);
 
 			this.readStream = readStream;
-			this.decoder = readStream.pipe(new lame.Decoder);
-			this.speaker = new Speaker({});
-			this.speaker.on('error', this.onError);
-
-			this.decoder
-				.pipe(this.speaker)
-				.on('error', this.onError)
-				.on('close', this.onDecoderClosed);
+			this._speaker.connect(readStream);
 		} else {
 			this.stop();
 		}
 	}
 
 	private deinit() {
+		console.log('deinit')
 		this.state = State.STOP;
 
-		if (this.speaker) {
-			this.speaker.close();
-			this.speaker.removeAllListeners('error');
-			this.speaker = null;
-		}
-
 		if (this.readStream) {
+			console.log('deinit::in::if::readStream')
+
 			this.readStream.removeAllListeners('close');
 			this.readStream.destroy();
 			this.readStream.removeAllListeners('error');
 			this.readStream = null;
 		}
 
-		if (this.decoder) {
-			this.decoder.removeAllListeners('close');
-			this.decoder.removeAllListeners('error');
-			this.decoder.unpipe();
-			this.decoder = null;
-		}
+		this._speaker.destroy();
 	}
 
 	private _emit(event: string, data?: any) {
 		//console.log('stupid-player _emit', event);
 		this.emit(event, data);
 	}
-	
+
 	private onDecoderClosed() {
 		return 	this.stop();
 	}
@@ -204,14 +163,4 @@ export default class StupidPlayer extends EventEmitter {
 			this.deinit();
 		}
 	}
-}
-
-
-interface Mpg123Util {
-	getVolume(mh: Buffer): number;
-	setVolume(mh: Buffer, volume: number);
-}
-
-interface Decoder extends SReadStream {
-	mh: Buffer;
 }
