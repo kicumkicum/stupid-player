@@ -2,7 +2,7 @@ const StupidPlayer = require('../lib').StupidPlayer;
 const State = require('../lib').State;
 const assert = require('assert');
 
-const url = `${__dirname}/files/Fragile-Lo-Fi-Chill-Melancholic-Music.mp3`;
+const url = `./`;
 
 
 describe('Creating', function() {
@@ -15,6 +15,10 @@ describe('Creating', function() {
 
 describe('Action', function() {
 	const stupidPlayer = new StupidPlayer;
+
+	afterEach(async () => {
+		await stupidPlayer.stop();
+	});
 
 	describe('playing', function() {
 		it('async', function(done) {
@@ -75,7 +79,7 @@ describe('Action', function() {
             });
 		});
 
-		it('should stop increasing offset on stop', function(done) {
+		it.skip('should stop increasing offset on stop', function(done) {
 			this.timeout(10 * 1000);
 
 			stupidPlayer.play(url).then(function() {
@@ -181,7 +185,7 @@ describe('Action', function() {
 				}, 19 * 1000);
 			});
 
-			it('Sync double playing', function(done) {
+			it.skip('Sync double playing', function(done) {
 				const stupidPlayer = new StupidPlayer;
 				const url = 'http://ya.ru/';
 				this.timeout(20 * 1000);
@@ -197,7 +201,7 @@ describe('Action', function() {
 				}, 19 * 1000);
 			});
 
-			it('Async playing', function() {
+			it.skip('Async playing', function() {
 
 			});
 		});
