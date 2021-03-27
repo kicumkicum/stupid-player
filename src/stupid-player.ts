@@ -167,6 +167,8 @@ export default class StupidPlayer extends EventEmitter {
 	}
 
 	private deinit() {
+		this.state = State.STOP;
+
 		if (this.speaker) {
 			this.speaker.close();
 			this.speaker.removeAllListeners('error');
@@ -197,9 +199,12 @@ export default class StupidPlayer extends EventEmitter {
 		return 	this.stop();
 	}
 
-	private onError(error: string) {
+	private onError(error: string): void {
 		this._emit(this.EVENT_ERROR, error);
-		return this.deinit();
+
+		if (this.state !== State.STOP) {
+			this.deinit();
+		}
 	}
 }
 

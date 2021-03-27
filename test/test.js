@@ -47,7 +47,7 @@ describe('Action', function() {
 					setTimeout(() => {
 						const offset = stupidPlayer.getOffset();
 						console.log('into setTimeout', offset);
-						assert.notEqual(currentOffset, stupidPlayer);
+						assert.notEqual(currentOffset, offset);
 						done();
 					}, 1000);
 				});

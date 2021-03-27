@@ -10,6 +10,7 @@
     "build": "./node_modules/.bin/tsc",
     "prestart": "npm run build",
     "start": "node ./lib",
+    "pretest": "npm run build",
     "test": "mocha --recursive --timeout 15000"
   },
   "dependencies": {
