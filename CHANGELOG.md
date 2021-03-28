@@ -1,3 +1,23 @@
+# v0.4.0
+
+## Feature
+
+Add playing magnet URI
+
+## Fix
+
+Fix long pausing
+
+# v0.3.4
+
+...
+
+# v0.3.3
+
+## Improvement
+
+Rewrite to typescript
+
 # v0.3.1 (19.04.2017)
 
 ## Feature
