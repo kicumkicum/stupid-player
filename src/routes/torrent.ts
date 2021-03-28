@@ -1,7 +1,7 @@
-import * as torrentStream from 'torrent-stream';
+import torrentStream from 'torrent-stream';
 import {Readable} from 'stream';
-import {decode as decodeMagnetURI} from 'magnet-uri';
-import * as combinedStream from 'combined-stream';
+import {decode as decodeMagnetURI, Instance} from 'magnet-uri';
+import combinedStream from 'combined-stream';
 import TorrentFile = TorrentStream.TorrentFile;
 
 
@@ -12,8 +12,9 @@ export default {
 
 	read(uri: string): Promise<FileStream> {
 		return new Promise((resolve, reject) => {
-			const decodedUri = decodeMagnetURI(uri);
+			const decodedUri = decodeMagnetURI(uri) as Instance & {'x.filepath': string};
 			const encodedFilePath = decodedUri['x.filepath'];
+
 			let totalSize = 0;
 
 			const filePath = decodeURI(encodedFilePath);
@@ -41,7 +42,7 @@ export default {
 				console.log(totalSize);
 
 				if (totalSize) {
-					resolve(stream);
+					resolve(stream as unknown as FileStream);
 				} else {
 				 	reject('File is not found');
 				}

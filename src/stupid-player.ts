@@ -42,7 +42,7 @@ export default class StupidPlayer extends EventEmitter {
 		});
 	}
 
-	play(uri): Promise<void> {
+	play(uri: string): Promise<void> {
 		this.deinit();
 		this.state = State.PLAY;
 
@@ -111,7 +111,7 @@ export default class StupidPlayer extends EventEmitter {
 		return this._speaker.getVolume();
 	}
 
-	async setVolume(value): Promise<void> {
+	async setVolume(value: number): Promise<void> {
 		await this._speaker.setVolume(value);
 	}
 
@@ -132,12 +132,9 @@ export default class StupidPlayer extends EventEmitter {
 	}
 
 	private deinit() {
-		console.log('deinit')
 		this.state = State.STOP;
 
 		if (this.readStream) {
-			console.log('deinit::in::if::readStream')
-
 			this.readStream.removeAllListeners('close');
 			this.readStream.destroy();
 			this.readStream.removeAllListeners('error');

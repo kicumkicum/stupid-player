@@ -1,5 +1,5 @@
-const StupidPlayer = require('../lib').StupidPlayer;
-const State = require('../lib').State;
+const StupidPlayer = require('../dist').StupidPlayer;
+const State = require('../dist').State;
 const assert = require('assert');
 
 const url = `${__dirname}/files/Fragile-Lo-Fi-Chill-Melancholic-Music.mp3`;
@@ -16,36 +16,44 @@ describe('Creating', function() {
 });
 
 
-describe.only('Fofo', () => {
+describe('Long case', () => {
   it('1', async function() {
+    this.timeout(45 * 1000);
     const stupidPlayer = new StupidPlayer();
-    this.timeout(45 * 1000)
 
     await stupidPlayer.play(url);
-    console.log('await stupidPlayer.play(url);')
     await wait(3000);
-    console.log('await wait(3000);')
-    await stupidPlayer.stop();
-    console.log('await stupidPlayer.stop();')
-    console.log('pre wait')
-    await wait(3000);
-    console.log('await wait(3000);')
-    console.log('pre play')
-    await stupidPlayer.play(url);
-    console.log('await stupidPlayer.play(url);')
-    await wait(3000);
-    console.log('await wait(3000);')
     await stupidPlayer.pause();
-    console.log('await stupidPlayer.pause();')
-    await wait(3000);
-    console.log('await wait(3000);')
+    await wait(2000);
     await stupidPlayer.resume();
-    console.log('await stupidPlayer.resume();')
-    await wait(3000);
-    console.log('await wait(3000);')
+    await wait(2000);
+    await stupidPlayer.pause();
+    await wait(2000);
+    await stupidPlayer.resume();
+    await wait(2000);
+    await stupidPlayer.pause();
+    await wait(2000);
+    await stupidPlayer.resume();
+    await wait(2000);
+
     await stupidPlayer.stop();
-    console.log('await stupidPlayer.stop();')
-  })
+  });
+
+  it('2', async function() {
+    this.timeout(45 * 1000);
+    const stupidPlayer = new StupidPlayer();
+
+    await stupidPlayer.play(url);
+    await wait(2000);
+
+    await stupidPlayer.stop();
+    await wait(2000);
+
+    await stupidPlayer.play(url);
+    await wait(2000);
+
+    await stupidPlayer.stop();
+  });
 });
 
 describe('Action', function() {

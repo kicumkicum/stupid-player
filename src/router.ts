@@ -28,8 +28,8 @@ export class Router {
 }
 
 export interface IRoute {
-	test: (string) => boolean;
-	read: (string) => Promise<SReadStream>;
+	test: (string: string) => boolean;
+	read: (string: string) => Promise<SReadStream>;
 }
 
 export interface SReadStream extends Readable {

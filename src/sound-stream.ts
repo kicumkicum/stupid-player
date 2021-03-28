@@ -1,13 +1,16 @@
 import {SReadStream} from "./router";
-import * as Speaker from 'speaker';
+//@ts-ignore
+import Speaker from 'speaker';
+//@ts-ignore
 import * as lame from 'lame';
+//@ts-ignore
 import * as mpg123Util from 'node-mpg123-util';
 
 const VOLUME_CHANGE_TIMEOUT = 300;
 
 interface Mpg123Util {
 	getVolume(mh: Buffer): number;
-	setVolume(mh: Buffer, volume: number);
+	setVolume(mh: Buffer, volume: number): void;
 }
 
 interface Decoder extends SReadStream {
@@ -23,6 +26,7 @@ class SoundStream {
 	private speaker: Speaker | null = null;
 	private mpg123Util: Mpg123Util = mpg123Util;
 	private _stream: any;
+	private _r: any;
 
 	constructor() {
 		this.onError = this.onError.bind(this);
@@ -33,10 +37,12 @@ class SoundStream {
 
 	connect(readStream: SReadStream) {
 		this.decoder = new lame.Decoder();
-		this._stream = readStream.pipe(this.decoder);
-
 		this.speaker = new Speaker({});
+
 		this.speaker.on('error', this.onError);
+		this._r = readStream;
+
+		this._stream = readStream.pipe(this.decoder);
 
 		this._stream
 			.pipe(this.speaker)
@@ -46,7 +52,11 @@ class SoundStream {
 	}
 
 	destroy() {
-		console.log('SS:destroy')
+		if (this._stream) {
+			this._stream.unpipe();
+			this._stream = null;
+		}
+
 		if (this.decoder) {
 			this.decoder.removeAllListeners('close');
 			this.decoder.removeAllListeners('error');
@@ -54,13 +64,9 @@ class SoundStream {
 		}
 
 		if (this.speaker) {
+			const s = this.speaker;
+			setImmediate(() => s.removeAllListeners('error'));
 			this.speaker.close();
-			// this.speaker.removeAllListeners('error');
-		}
-
-		if (this._stream) {
-			// this._stream.unpipe();
-			this._stream = null;
 		}
 	}
 
@@ -69,7 +75,7 @@ class SoundStream {
 	}
 
 	resume() {
-		this.decoder.pipe(new Speaker({}));
+		this.decoder.pipe(this.speaker);
 	}
 
 	getVolume(): number {
@@ -83,7 +89,7 @@ class SoundStream {
 		return value;
 	}
 
-	private onError(err) {
+	private onError(err: string) {
 		console.log('!!!!!!', err)
 	}
 

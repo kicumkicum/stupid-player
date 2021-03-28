@@ -1,5 +1,5 @@
 const assert = require('assert');
-const {SoundStream} = require('../lib/sound-stream');
+const {SoundStream} = require('../dist/sound-stream');
 
 describe('SoundStream', () => {
   it('Should implement the interface', () => {

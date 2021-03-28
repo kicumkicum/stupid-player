@@ -1,5 +1,5 @@
 const assert = require('assert');
-const torrentRoute = require('../../lib/routes/torrent').default;
+const torrentRoute = require('../../dist/routes/torrent').default;
 const uriFixtures = require('../fixtures/uri.json');
 
 describe('URI', () => {
