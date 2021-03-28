@@ -2,26 +2,30 @@
 
 It's middleware for simple create player in node.js project.
 
+You can play http-link, file path and magnet URI.
+
 ```javascript
 /** CREATE */
-var player = new (require('stupid-player'));
+const StupidPlayer = require('stupid-player');
+
+const player = new StupidPlayer();
 
 player.on(player.EVENT_PLAY, callback);
 player.on(player.EVENT_STOP, callback);
 player.on(player.EVENT_ERROR, callback);
 
-player.play(urlOrPath)
-  .then(function() {
-    /** SOME CODE */
-  });
-  
-/** CHANGE VOLUME */
-var value = 50;// 0..100
-player.setVolume(value)
-  .then(function() {
-    var currentVolume = player.getVolume();
-    console.log(currentVolume);
-  };
-player.stop();
-```
+(async () => {
+    await player.play(urlOrPathOrMagnet)
+    // Some code...
 
+  
+    /** CHANGE VOLUME */
+    const volume = 50;// 0..100
+
+    await player.setVolume(volume)
+    const currentVolume = player.getVolume();
+    console.log(currentVolume);
+
+    await player.stop();
+})()
+```

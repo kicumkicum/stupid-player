@@ -33,10 +33,11 @@ export default {
 					const file = files.filter((file) => file.path === filePath)[0];
 					append(file);
 				} else {
-					// TODO: Implement streaming multiple files
-					// files
-					// 	.filter((file) => file.name.match(/\.mp3$/))
-					// 	.forEach((file) => append(file));
+					files
+						.filter((file) => file.name.match(/\.mp3$/))
+						// @ts-ignore
+						.sort((a, b) => a - b)
+						.forEach((file) => append(file));
 				}
 
 				console.log(totalSize);
