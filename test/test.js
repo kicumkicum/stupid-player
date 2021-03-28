@@ -2,7 +2,7 @@ const StupidPlayer = require('../dist').StupidPlayer;
 const State = require('../dist').State;
 const assert = require('assert');
 
-const url = `${__dirname}/files/Fragile-Lo-Fi-Chill-Melancholic-Music.mp3`;
+const url = `https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3`;
 const wait = (timeout) => {
 	return new Promise((resolve) => setTimeout(resolve, timeout));
 };
