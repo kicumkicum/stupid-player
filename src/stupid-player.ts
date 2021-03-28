@@ -150,7 +150,7 @@ export default class StupidPlayer extends EventEmitter {
 	}
 
 	private onDecoderClosed() {
-		return 	this.stop();
+		return this.stop();
 	}
 
 	private onError(error: string): void {
