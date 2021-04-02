@@ -22,6 +22,7 @@ const wait = (timeout: number): Promise<void> => {
 	return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
+//@ts-ignore
 const createSound = (onError, onClose, readStream) => {
 	const decoder = new lame.Decoder();
 	const speaker = new Speaker({});
@@ -39,16 +40,11 @@ const createSound = (onError, onClose, readStream) => {
 		decoder,
 	};
 };
-
-const destroySound = (decoder, speaker) => {
+//@ts-ignore
+const destroySound = (speaker, onError) => {
 	const noopErrorHandler = () => {};
 
-	decoder.unpipe();
-	speaker.unpipe();
-
-	speaker.removeAllListeners('error');
-	decoder.removeAllListeners('error');
-	decoder.removeAllListeners('close');
+	speaker.removeListener('error', onError);
 
 	speaker.on('error', noopErrorHandler);
 	speaker.close();
@@ -74,17 +70,26 @@ class SoundStream {
 
 		this.decoder = decoder;
 		this.speaker = speaker;
+		this.readStream = readStream;
 	}
 
 	unpipe() {
-		if (!this.decoder && !this.speaker) {
-			return;
+		if (this.readStream) {
+			this.readStream.unpipe();
+			this.readStream = null;
 		}
 
-		destroySound(this.decoder, this.speaker);
+		if (this.decoder) {
+			this.decoder.unpipe();
+			this.decoder.removeListener('error', this.onError);
+			this.decoder.removeListener('close', this.onDecoderClosed);
+			this.decoder = null;
+		}
 
-		this.decoder = null;
-		this.speaker = null;
+		if (this.speaker) {
+			destroySound(this.speaker, this.onError);
+			this.speaker = null;
+		}
 	}
 
 	getVolume(): number {
