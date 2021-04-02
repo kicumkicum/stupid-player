@@ -60,7 +60,7 @@ export default class StupidPlayer extends EventEmitter {
 		if (this.state === State.PLAY) {
 			this.state = State.PAUSE;
 
-			this._speaker.pause();
+			this._speaker.unpipe();
 		}
 
 		return Promise.resolve()
@@ -71,7 +71,7 @@ export default class StupidPlayer extends EventEmitter {
 		if (this.state === State.PAUSE) {
 			this.state = State.PLAY;
 
-			this._speaker.resume();
+			this._speaker.pipe(this.readStream);
 		}
 
 		return Promise.resolve()
@@ -125,7 +125,7 @@ export default class StupidPlayer extends EventEmitter {
 			readStream.on('close', this.onDecoderClosed);
 
 			this.readStream = readStream;
-			this._speaker.connect(readStream);
+			this._speaker.pipe(readStream);
 		} else {
 			this.stop();
 		}
@@ -141,7 +141,7 @@ export default class StupidPlayer extends EventEmitter {
 			this.readStream = null;
 		}
 
-		this._speaker.destroy();
+		this._speaker.unpipe();
 	}
 
 	private _emit(event: string, data?: any) {

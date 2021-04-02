@@ -22,18 +22,33 @@ const wait = (timeout: number): Promise<void> => {
 	return new Promise((resolve) => setTimeout(resolve, timeout));
 };
 
-const createSpeaker = (onError: (err: string) => void): any => {
+const createSound = (onError, onClose, readStream) => {
+	const decoder = new lame.Decoder();
 	const speaker = new Speaker({});
 
+	decoder.on('close', onClose);
+	decoder.on('error', onError);
 	speaker.on('error', onError);
 
-	return speaker;
+	readStream
+		.pipe(decoder)
+		.pipe(speaker);
+
+	return {
+		speaker,
+		decoder,
+	};
 };
 
-const destroySpeaker = (speaker: Speaker): void => {
+const destroySound = (decoder, speaker) => {
 	const noopErrorHandler = () => {};
 
+	decoder.unpipe();
+	speaker.unpipe();
+
 	speaker.removeAllListeners('error');
+	decoder.removeAllListeners('error');
+	decoder.removeAllListeners('close');
 
 	speaker.on('error', noopErrorHandler);
 	speaker.close();
@@ -49,48 +64,27 @@ class SoundStream {
 
 	constructor() {
 		this.onError = this.onError.bind(this);
-
-		this.decoder.on('close', this.onDecoderClosed);
-        this.decoder.on('error', this.onError);
+		this.onDecoderClosed = this.onDecoderClosed.bind(this);
 	}
 
-	connect(readStream: SReadStream) {
-		this.readStream = readStream;
-		this.speaker = createSpeaker(this.onError);
+	pipe(readStream: Readable) {
+		this.unpipe();
 
-		this.readStream
-			.pipe(this.decoder)
-			.pipe(this.speaker);
+		const {decoder, speaker} = createSound(this.onError, this.onDecoderClosed, readStream);
+
+		this.decoder = decoder;
+		this.speaker = speaker;
 	}
 
-	destroy() {
-		if (this.readStream) {
-			this.readStream.unpipe();
+	unpipe() {
+		if (!this.decoder && !this.speaker) {
+			return;
 		}
 
-		if (this.decoder) {
-			this.decoder.removeAllListeners('close');
-			this.decoder.removeAllListeners('error');
-			this.decoder.unpipe();
-		}
+		destroySound(this.decoder, this.speaker);
 
-		if (this.speaker) {
-			destroySpeaker(this.speaker);
-			this.speaker = null;
-		}
-	}
-
-	pause() {
-		this.readStream.unpipe();
-		this.decoder.unpipe();
-		destroySpeaker(this.speaker);
-	}
-
-	resume() {
-		this.speaker = createSpeaker(this.onError);
-
-		this.readStream.pipe(this.decoder);
-		this.decoder.pipe(this.speaker);
+		this.decoder = null;
+		this.speaker = null;
 	}
 
 	getVolume(): number {
