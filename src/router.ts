@@ -3,29 +3,23 @@ import httpRoute from './routes/http';
 import torrentRoute from './routes/torrent';
 import {Readable} from 'stream';
 
-export class Router {
-	private routes: IRoute[];
+const Routes = [
+	torrentRoute,
+	fileRoute,
+	httpRoute,
+];
 
-	constructor() {
-		this.routes = [
-			torrentRoute,
-			fileRoute,
-			httpRoute
-		];
+export const route = (uri: string): Promise<SReadStream> => {
+	const route = Routes.filter((protocol) => {
+		return protocol.test(uri);
+	})[0];
 
+	if (route) {
+		return route.read(uri);
+	} else {
+		return Promise.reject('Uri is not supported');
 	}
-
-	route(uri: string): Promise<SReadStream> {
-		const route = this.routes.filter((protocol) => {
-			return protocol.test(uri);
-		})[0];
-		if (route) {
-			return route.read(uri);
-		} else {
-			return Promise.reject('Uri is not supported');
-		}
-	}
-}
+};
 
 export interface IRoute {
 	test: (string: string) => boolean;

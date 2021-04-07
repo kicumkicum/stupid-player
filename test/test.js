@@ -20,8 +20,9 @@ describe('Long case', () => {
   it('1', async function() {
     this.timeout(45 * 1000);
     const stupidPlayer = new StupidPlayer();
+    const stream = await StupidPlayer.getReadStream(url);
 
-    await stupidPlayer.play(url);
+    await stupidPlayer.play(stream);
     await wait(3000);
     await stupidPlayer.pause();
     await wait(2000);
@@ -42,14 +43,16 @@ describe('Long case', () => {
   it('2', async function() {
     this.timeout(45 * 1000);
     const stupidPlayer = new StupidPlayer();
+    const stream1 = await StupidPlayer.getReadStream(url);
 
-    await stupidPlayer.play(url);
+    await stupidPlayer.play(stream);
     await wait(2000);
 
     await stupidPlayer.stop();
     await wait(2000);
 
-    await stupidPlayer.play(url);
+    const stream2 = await StupidPlayer.getReadStream(url);
+    await stupidPlayer.play(stream2);
     await wait(2000);
 
     await stupidPlayer.stop();
@@ -186,8 +189,10 @@ describe('Action', function() {
 		});
 
 		describe('Sync', () => {
-			it('play-pause-resume', () => {
-				stupidPlayer.play(url);
+			it('play-pause-resume', async () => {
+        const stream = await StupidPlayer.getReadStream(url);
+
+				stupidPlayer.play(stream);
 				stupidPlayer.pause();
 				assert.equal(State.PAUSE, stupidPlayer.getState(), 'state');
 

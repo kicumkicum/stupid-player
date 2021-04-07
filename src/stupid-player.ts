@@ -1,6 +1,7 @@
 import {EventEmitter} from 'events';
-import {Router, SReadStream} from './router';
-import {SoundStream} from "./sound-stream";
+import {Readable} from 'stream';
+import {route, SReadStream} from './router';
+import {SoundStream} from './sound-stream';
 
 export enum State {
 	PAUSE = 'pause',
@@ -13,7 +14,6 @@ export default class StupidPlayer extends EventEmitter {
 	private offsetInterval: (NodeJS.Timer|null) = null;
 	private readStream: (SReadStream|null) = null;
 	private state: State = State.STOP;
-	private router: Router = new Router;
 	private _speaker: SoundStream = new SoundStream();
 
 	readonly EVENT_ERROR: string = 'event-error';
@@ -42,18 +42,17 @@ export default class StupidPlayer extends EventEmitter {
 		});
 	}
 
-	play(uri: string): Promise<void> {
+	play(readStream: Readable): Promise<void> {
 		this.deinit();
 		this.state = State.PLAY;
 
 		// Only called on new playback
 		this.offset = 0;
 
-		this._emit(this.EVENT_PLAY);
+		this.makeDecoder(readStream);
 
-		return this.router
-			.route(uri)
-			.then((readStream) => this.makeDecoder(readStream), this.onError);
+		return Promise.resolve()
+			.then(() => this._emit(this.EVENT_PLAY));
 	}
 
 	pause(): Promise<void> {
@@ -159,5 +158,9 @@ export default class StupidPlayer extends EventEmitter {
 		if (this.state !== State.STOP) {
 			this.deinit();
 		}
+	}
+
+	static getReadStream(uri: string) {
+		return route(uri);
 	}
 }

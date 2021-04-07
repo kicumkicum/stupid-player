@@ -2,7 +2,7 @@
 
 It's middleware for simple create player in node.js project.
 
-You can play http-link, file path and magnet URI.
+You can play any readable stream with mp3 content. But you can create readable stream for http-link, file path and magnet URI with internal method.
 
 ```javascript
 /** CREATE */
@@ -15,7 +15,9 @@ player.on(player.EVENT_STOP, callback);
 player.on(player.EVENT_ERROR, callback);
 
 (async () => {
-    await player.play(urlOrPathOrMagnet)
+    const readStream = await StupidPlayer.getReadStream(urlOrPathOrMagnet);
+
+    await player.play(readStream);
     // Some code...
 
   
