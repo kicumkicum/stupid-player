@@ -16,7 +16,7 @@ export default class StupidPlayer extends EventEmitter {
 	private state: State = State.STOP;
 	private _speaker: SoundStream = new SoundStream();
 
-	readonly EVENT_ERROR: string = 'event-error';
+	readonly EVENT_ERROR: string = 'error';
 	readonly EVENT_PAUSE: string = 'event-pause';
 	readonly EVENT_PLAY: string = 'event-play';
 	readonly EVENT_STOP: string = 'event-stop';
