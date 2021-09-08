@@ -1,38 +1,52 @@
-# v0.4.0
+# Changelog
 
-## Feature
+## 0.4.1
 
-Add playing magnet URI
+### Fix
 
-## Fix
-
-Fix long pausing
-
-# v0.3.4
-
-...
-
-# v0.3.3
+* Emit error event
+* Fix resuming
 
 ## Improvement
 
-Rewrite to typescript
+* Add info about building in README
+* Add info about playing magnet link in README
 
-# v0.3.1 (19.04.2017)
+## v0.4.0
 
-## Feature
+### Feature
+
+* Add playing magnet URI
+
+### Fix
+
+* Fix long pausing
+
+## v0.3.4
+
+...
+
+## v0.3.3
+
+### Improvement
+
+* Rewrite to typescript
+
+## v0.3.1 (19.04.2017)
+
+### Feature
 * [#47](https://github.com/kicumkicum/stupid-player/issues/47)
 Add offset tracking, API and tests
 
-# v0.3.0 (25.11.2016)
+## v0.3.0 (25.11.2016)
 
-## Feature
+### Feature
 * [#9](https://github.com/kicumkicum/stupid-player/issues/9)
 Add play/pause
 * [#25](https://github.com/kicumkicum/stupid-player/issues/25)
 Change volume range from 0-1 to 0-100
 
-## Improvement
+### Improvement
 * [#19](https://github.com/kicumkicum/stupid-player/issues/19)
 Add tests
 * [#24](https://github.com/kicumkicum/stupid-player/issues/24)
@@ -44,20 +58,20 @@ Add rule for `*.md` files in editorconfig
 * [#42](https://github.com/kicumkicum/stupid-player/issues/42)
 Set node.js version in package.json as engine
 
-## Fix
+### Fix
 * [#13](https://github.com/kicumkicum/stupid-player/issues/13)
 Fix crash if url is empty
 * [#39](https://github.com/kicumkicum/stupid-player/issues/39)
 Fix some crashes
 
-# v0.2.0 (19.06.2016)
+## v0.2.0 (19.06.2016)
 
-## Feature
+### Feature
 * [#15](https://github.com/kicumkicum/stupid-player/issues/15)
 Rename event **StupidPlayer.prototype.EVENT_START** to **StupidPlayer.prototype.EVENT_PLAY**
 * [#16](https://github.com/kicumkicum/stupid-player/issues/16)
 Add method **StupidPlayer.prototype.getState**
 
-## Fix
+### Fix
 * [#20](https://github.com/kicumkicum/stupid-player/issues/20)
 Fix crash build
