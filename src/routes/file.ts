@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import {ReadStream} from 'fs';
 
 export default {
-	test: (uri: string): boolean => /^\.|^\//.test(uri),
+	test: (uri: string): boolean => /^\.|^\//.test(uri) || /^[a-zA-Z]:\\[\\\S|*\S]?.*$/g.test(uri),
 
 	read: (path: string): Promise<ReadStream> => {
 		return new Promise((resolve, reject) => {
