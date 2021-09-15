@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "noImplicitAny": true,
+    // TODO: Revert "noImplicitAny" to "true"
+    "noImplicitAny": false,
     "noImplicitReturns": true,
     "declaration": true
   },

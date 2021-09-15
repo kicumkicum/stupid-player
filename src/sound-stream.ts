@@ -3,7 +3,7 @@ import {SReadStream} from './router';
 //@ts-ignore
 import Speaker from 'speaker';
 //@ts-ignore
-import * as lame from 'lame';
+import * as lame from '@schneefux/lame';
 //@ts-ignore
 import * as mpg123Util from 'node-mpg123-util';
 
@@ -24,6 +24,7 @@ const wait = (timeout: number): Promise<void> => {
 
 //@ts-ignore
 const createSound = (onError, onClose, readStream) => {
+    //@ts-ignore
 	const decoder = new lame.Decoder();
 	const speaker = new Speaker({});
 
@@ -53,6 +54,7 @@ const destroySound = (speaker, onError) => {
 };
 
 class SoundStream {
+	//@ts-ignore
 	private decoder: lame.Decoder = new lame.Decoder();
 	private speaker: Speaker | null = null;
 	private mpg123Util: Mpg123Util = mpg123Util;
