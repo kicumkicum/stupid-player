@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.3
+
+### Fix
+
+* Fix check file path for windows
+
+## 0.4.2
+
+### Fix
+
+* Fix build on node@14
+
 ## 0.4.1
 
 ### Fix
