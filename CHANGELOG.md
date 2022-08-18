@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.4
+
+### Fix
+
+* Fix uncaught exception in request
+
 ## 0.4.3
 
 ### Fix
